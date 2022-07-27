@@ -9,7 +9,10 @@
   "author": "djamal bekhiekh",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "sequelize": "^6.21.3"
+    "mysql2": "^2.3.3",
+    "sequelize": "^5.0.0",
+    "sequelize-hierarchy": "^2.0.4"
   }
 }
