@@ -1,7 +1,8 @@
-const categorySchema = require('../../../components/categories/database/category-sequelize-schema');
+const {CategorySchema, categoryancestor} = require('../../../components/categories/database/category-sequelize-schema');
 
 const schemas = [
-    categorySchema,
+    CategorySchema,
+    categoryancestor
 ];
 
 function syncDatabase() {

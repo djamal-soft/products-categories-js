@@ -9,6 +9,7 @@
   "author": "djamal bekhiekh",
   "license": "ISC",
   "dependencies": {
+    "awilix": "^7.0.3",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "mysql2": "^2.3.3",
