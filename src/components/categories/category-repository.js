@@ -1,3 +1,4 @@
+const ResourceNotFoundError = require('../../common/exceptions/business/resource-not-found-error');
 const Category = require('./category');
 
 class CategoryRepository {
@@ -40,6 +41,10 @@ class CategoryRepository {
               hierarchy: hierarchy
             }
           });
+
+        if (!category) {
+            throw new ResourceNotFoundError(`category with id: '${id}' doesn't exists`)
+        }
         
         return Category.fromObject(
             JSON.parse(JSON.stringify(category))
@@ -54,18 +59,33 @@ class CategoryRepository {
      * @returns {int}
      */
     async create(category) {
-        const createdCategory = await this.categorySchema.create(category);
+        const createdCategory = await this.categorySchema.create(category.serialize());
+
         return createdCategory.id;
     }
 
+    /**
+     * Update category data identified by category.id in database.
+     * 
+     * @param {Category} category 
+     */
     async update(category) {
-        await this.categorySchema.update(category.serialize(), {
+        const result = await this.categorySchema.update(category.serialize(), {
             where: {
               id: category.id
             }
         });
+
+        if(result?.pop() === 0) {
+            throw new ResourceNotFoundError(`category with id: '${category.id}' doesn't exists`)
+        }
     }
 
+    /**
+     * Delete category identified by id from database.
+     * 
+     * @param {Category} category 
+     */
     async delete(id) {
         await this.categorySchema.destroy({
             where: { id }

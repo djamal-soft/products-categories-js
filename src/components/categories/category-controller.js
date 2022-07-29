@@ -1,3 +1,4 @@
+const httpErrorsFactory = require("../../common/exceptions/http/http-errors-factory");
 const Category = require("./category");
 
 class CategoryController {
@@ -12,15 +13,15 @@ class CategoryController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    async getAllCategories(req, res) {
+    async getAllCategories(req, res, next) {
         try {
             const hierarchy = req.query.hierarchy === 'true';
             const categories = await this.categoryService.findAll(hierarchy);
 
             res.json(categories.map(c => c.serialize()));
         } catch (error) {
-            console.log(error);
-            res.status(500).send('error');
+            const httpError = httpErrorsFactory.fromBusinessError(error);
+            next(httpError);
         }
     }
 
@@ -30,7 +31,7 @@ class CategoryController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    async getCategoryById(req, res) {
+    async getCategoryById(req, res, next) {
         try {
             const id        = req.params.id;
             const hierarchy = req.query.hierarchy === 'true';
@@ -39,8 +40,8 @@ class CategoryController {
 
             res.json(category.serialize());
         } catch (error) {
-            console.log(error);
-            res.status(500).send('error');
+            const httpError = httpErrorsFactory.fromBusinessError(error);
+            next(httpError);
         }
     }
 
@@ -50,13 +51,15 @@ class CategoryController {
      * @param {Request} req 
      * @param {Response} res 
      */
-    async createCategory(req, res) {
+    async createCategory(req, res, next) {
         try {
-            const id = await this.categoryService.create(req.body);
+            const category = Category.fromObject(req.body);
+            const id = await this.categoryService.create(category);
 
             res.json({id});
         } catch (error) {
-            res.status(500).send(error.message);
+            const httpError = httpErrorsFactory.fromBusinessError(error);
+            next(httpError);
         }
     }
 
@@ -66,7 +69,7 @@ class CategoryController {
      * @param {Request} req 
      * @param {Response} res 
      */
-     async updateCategory(req, res) {
+     async updateCategory(req, res, next) {
         try {
             const id        = req.params.id;
             const category  = Category.fromObject({...req.body, id});
@@ -74,8 +77,8 @@ class CategoryController {
 
             res.status(201).json({});
         } catch (error) {
-            console.log(error);
-            res.status(500).send('error');
+            const httpError = httpErrorsFactory.fromBusinessError(error);
+            next(httpError);
         }
     }
 
@@ -85,15 +88,15 @@ class CategoryController {
      * @param {Request} req 
      * @param {Response} res 
      */
-     async deleteCategory(req, res) {
+     async deleteCategory(req, res, next) {
         try {
             const id = req.params.id;
             await this.categoryService.delete(id);
 
             res.status(204).json({});
         } catch (error) {
-            console.log(error);
-            res.status(500).send('error');
+            const httpError = httpErrorsFactory.fromBusinessError(error);
+            next(httpError);
         }
     }
 

@@ -1,7 +1,10 @@
+const ActionsEnum = require("./actions-enum");
+
 class CategoryService {
     
-    constructor(categoryRepository) {
+    constructor(categoryRepository, categoryValidator) {
         this.repository = categoryRepository;
+        this.validator  = categoryValidator;
     }
 
     /**
@@ -38,12 +41,21 @@ class CategoryService {
      * @returns {int} created category id
      */
     async create(category) {
-        
+        this.validator.validate(
+            category.serialize(), 
+            ActionsEnum.CREATE_CATEGORY
+        );
+
         return this.repository.create(category);
     }
 
-    update(category) {
-        this.repository.update(category);
+    async update(category) {
+        this.validator.validate(
+            category.serialize(), 
+            ActionsEnum.UPDATE_CATEGORY
+        );
+
+        await this.repository.update(category);
     }
 
     delete(id) {
