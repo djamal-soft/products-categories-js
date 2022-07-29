@@ -8,6 +8,7 @@ const NotFoundError = require("./not-found-error");
 class httpErrorsFactory {
 
     static fromBusinessError(error) {
+        console.log(error);
         if (!(error instanceof BusinessBaseError)) {
             return new InternalServerError('internal server error');
         }

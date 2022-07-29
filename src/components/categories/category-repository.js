@@ -84,7 +84,7 @@ class CategoryRepository {
     /**
      * Delete category identified by id from database.
      * 
-     * @param {Category} category 
+     * @param {int} id 
      */
     async delete(id) {
         await this.categorySchema.destroy({
