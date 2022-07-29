@@ -2,9 +2,10 @@ const ActionsEnum = require("./actions-enum");
 
 class ProductService {
     
-    constructor(productRepository, productValidator) {
+    constructor(productRepository, productValidator, categoryService) {
         this.repository = productRepository;
         this.validator  = productValidator;
+        this.categoryService = categoryService;
     }
 
     /**
@@ -58,6 +59,17 @@ class ProductService {
 
     delete(id) {
         this.repository.delete(id);
+    }
+
+    /**
+     * Returns products belongs to array of categories.
+     * 
+     * @param {Array<number>} categories 
+     */
+     async getProductsBelongsTo(categoryId) {
+         const categories = await this.categoryService.getSubCategoriesIds(categoryId);
+         console.log(categories);
+        return this.repository.getProductsBelongsTo(categories);
     }
 }
 

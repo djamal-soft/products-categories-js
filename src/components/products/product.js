@@ -29,6 +29,20 @@ class Product extends BaseModel {
     get name() {
         return this._name;
     }
+
+    /**
+     * @param {int} value 
+     */
+     set categories(value) {
+        this._categories = value;
+    }
+
+    /**
+     * @return {int}
+     */
+    get categories() {
+        return this._categories;
+    }
 }
 
 module.exports = Product;

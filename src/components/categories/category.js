@@ -57,6 +57,12 @@ class Category extends BaseModel {
     get children() {
         return this._children;
     }
+
+    get ids() {
+        return this.children?.length > 0 
+            ? [this.id, ...this.children.flatMap(c => c.ids)] 
+            : this.id;
+    }
 }
 
 module.exports = Category;

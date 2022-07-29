@@ -1,3 +1,5 @@
+const { Op } = require('sequelize');
+const { CategorySchema } = require('../../common/database/sequelize/schemas');
 const ResourceNotFoundError = require('../../common/exceptions/business/resource-not-found-error');
 const Product = require('./product');
 
@@ -52,7 +54,9 @@ class ProductRepository {
      * @returns {int}
      */
     async create(product) {
-        const createdProduct = await this.productSchema.create(product.serialize());
+        const {categories, ...rest} = product.serialize()
+        const createdProduct = await this.productSchema.create(rest);
+        await createdProduct.addCategory(categories);
 
         return createdProduct.id;
     }
@@ -79,10 +83,36 @@ class ProductRepository {
      * 
      * @param {int} id 
      */
-    async delete(id) {
+     async delete(id) {
         await this.productSchema.destroy({
             where: { id }
           });
+    }
+
+    /**
+     * Returns products belongs to array of categories.
+     * 
+     * @param {Array<number>} categories 
+     */
+     async getProductsBelongsTo(categories) {
+         console.log({categories});
+        const result = this.productSchema.findAll({
+           //attributes: ['id', 'name'],
+            include: [{
+                model: CategorySchema,
+                attributes: [],
+                required: true,
+                through: {
+                   attributes: [],
+                    where: {
+                        categoryId: {[Op.in]: categories}
+                    }
+                }
+            }],
+            raw: true,
+        });
+
+        return result.map(p => Product.fromObject(p));
     }
 }
 

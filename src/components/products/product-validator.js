@@ -4,6 +4,7 @@ const rules = {};
 
 rules[ActionsEnum.CREATE_PRODUCT] = {
     'name': 'required|string|min:3|max:255',
+    'categories.*': 'numeric|min:1'
 }
 
 rules[ActionsEnum.UPDATE_PRODUCT] = {

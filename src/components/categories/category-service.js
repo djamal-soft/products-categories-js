@@ -25,7 +25,7 @@ class CategoryService {
      * if hierarchy is true then return data as a hierarchy 
      * otherwise return category without children.
      * 
-     * @param {int} id 
+     * @param {number} id 
      * @param {boolean} hierarchy 
      * 
      * @returns {Array<Category>}
@@ -38,7 +38,7 @@ class CategoryService {
      * Persist category using supported storage.
      * 
      * @param {Category} category 
-     * @returns {int} created category id
+     * @returns {number} created category id
      */
     async create(category) {
         this.validator.validate(
@@ -49,6 +49,11 @@ class CategoryService {
         return this.repository.create(category);
     }
 
+    /**
+     * Update category identified by category.id.
+     * 
+     * @param {Category} category 
+     */
     async update(category) {
         this.validator.validate(
             category.serialize(), 
@@ -58,8 +63,26 @@ class CategoryService {
         await this.repository.update(category);
     }
 
-    delete(id) {
+    /**
+     * delete category identified by category.id.
+     * 
+     * @param {number} id 
+     */
+     delete(id) {
         this.repository.delete(id);
+    }
+
+    /**
+     * Returns category and sub category ids.
+     * 
+     * @param {number} id
+     * 
+     * @return {Array<number>} 
+     */
+     async getSubCategoriesIds(id) {
+        const category = await this.findById(id, true);
+        
+        return category.ids;
     }
 }
 

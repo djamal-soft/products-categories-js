@@ -51,7 +51,9 @@ class ProductController {
      */
     async createProduct(req, res, next) {
         try {
+            console.log(req.body);
             const product = Product.fromObject(req.body);
+            console.log(product);
             const id = await this.productService.create(product);
 
             res.json({id});
@@ -92,6 +94,24 @@ class ProductController {
             await this.productService.delete(id);
 
             res.status(204).json({});
+        } catch (error) {
+            const httpError = httpErrorsFactory.fromBusinessError(error);
+            next(httpError);
+        }
+    }
+
+    /**
+     * Handle delete product identified by id route.
+     * 
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+     async getProductsBelongsTo(req, res, next) {
+        try {
+            const categoryId = req.params.categoryId;
+            const products   = await this.productService.getProductsBelongsTo(categoryId);
+
+            res.json(products.map(p => p.serialize()));
         } catch (error) {
             const httpError = httpErrorsFactory.fromBusinessError(error);
             next(httpError);
