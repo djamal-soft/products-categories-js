@@ -31,7 +31,7 @@ class CategoryService {
      * 
      * @returns {Array<Category>}
      */
-    findById(id, hierarchy = false) {
+    async findById(id, hierarchy = false) {
         return this.repository.findById(id, hierarchy);
     }
 

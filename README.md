@@ -20,7 +20,7 @@ To get started, make sure you have [Docker installed](https://docs.docker.com/) 
 3. install dependencies via npm:
 
    ```sh
-   docker compose run --rm app npm install
+   npm install
    ```
    
 4. Open this url for test project in local server
@@ -28,6 +28,12 @@ To get started, make sure you have [Docker installed](https://docs.docker.com/) 
     ```
     http://localhost:5000
     ```
+
+5. run tests:
+
+   ```sh
+   npm test
+   ```
 ## Special Cases
 
 To Down and remove the volumes we use the next command:

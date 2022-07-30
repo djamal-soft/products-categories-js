@@ -21,3 +21,5 @@ app.use(httpErrorsHandler);
 app.listen(port, () => {
     console.log(`Now listening on port ${port}`); 
 });
+
+module.exports = app;

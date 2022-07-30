@@ -56,7 +56,7 @@ class CategoryController {
             const category = Category.fromObject(req.body);
             const id = await this.categoryService.create(category);
 
-            res.json({id});
+            res.status(201).json({id});
         } catch (error) {
             const httpError = httpErrorsFactory.fromBusinessError(error);
             next(httpError);
