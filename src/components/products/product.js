@@ -1,4 +1,5 @@
 const BaseModel = require("../../common/models/base-model");
+const Category = require("../categories/category");
 
 class Product extends BaseModel {
 
@@ -34,7 +35,12 @@ class Product extends BaseModel {
      * @param {int} value 
      */
      set categories(value) {
-        this._categories = value;
+        if(value.every(v => typeof v === 'number')) {
+            this._categories = value;
+        } else {
+            this._categories = value.map(v => Category.fromObject(v));
+        }
+        
     }
 
     /**

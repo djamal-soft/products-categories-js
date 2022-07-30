@@ -19,9 +19,14 @@ class ProductRepository {
      * @returns {Array<Product>}
      */
     async findAll() {
-        const products = await this.productSchema.findAll({ raw: true });
+        const products = await this.productSchema.findAll({ 
+            include: CategorySchema,
+        });
 
-        return products.map(c => Product.fromObject(c));
+        return products.map(p => Product.fromObject(
+                JSON.parse(JSON.stringify(p))
+            )
+        );
     }
 
     /**
@@ -37,6 +42,7 @@ class ProductRepository {
     async findById(id) {
         const product = await this.productSchema.findOne({
             where: { id },
+            include: CategorySchema,
           });
 
         if (!product) {
@@ -71,14 +77,23 @@ class ProductRepository {
      * @throws ResourceNotFoundError
      */
     async update(product) {
-        const result = await this.productSchema.update(product.serialize(), {
-            where: {
-              id: product.id
-            }
+
+        const fetchedProduct = await this.productSchema.findOne({
+            where: { id: product.id },
         });
 
-        if(result?.pop() === 0) {
+        if(!fetchedProduct) {
             throw new ResourceNotFoundError(`product with id: '${product.id}' doesn't exists`)
+        }
+
+        fetchedProduct.update(product.serialize());
+
+        if(product.categories) {
+            const fetchedProduct = await this.productSchema.findOne({
+                where: { id: product.id },
+            });
+    
+            fetchedProduct.setCategories(product.categories);
         }
     }
 

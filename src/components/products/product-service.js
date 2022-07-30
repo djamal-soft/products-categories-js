@@ -71,6 +71,10 @@ class ProductService {
             ActionsEnum.UPDATE_CATEGORY
         );
 
+        if(product.categories) {
+            await this.categoryService.isAllCategoriesExists(product.categories);
+        }
+
         await this.repository.update(product);
     }
 
