@@ -30,6 +30,8 @@ class ProductRepository {
      * @param {int} id 
      * @param {boolean} hierarchy 
      * 
+     * @throws ResourceNotFoundError
+     * 
      * @returns {Array<Product>}
      */
     async findById(id) {
@@ -65,6 +67,8 @@ class ProductRepository {
      * Update product data identified by product.id in database.
      * 
      * @param {Product} product 
+     * 
+     * @throws ResourceNotFoundError
      */
     async update(product) {
         const result = await this.productSchema.update(product.serialize(), {
@@ -93,11 +97,12 @@ class ProductRepository {
      * Returns products belongs to array of categories.
      * 
      * @param {Array<number>} categories 
+     * 
+     * @return {Array<Product>} 
      */
      async getProductsBelongsTo(categories) {
-         console.log({categories});
         const result = this.productSchema.findAll({
-           //attributes: ['id', 'name'],
+            group: ['id'],
             include: [{
                 model: CategorySchema,
                 attributes: [],

@@ -1,3 +1,4 @@
+const ResourceNotFoundError = require("../../common/exceptions/business/resource-not-found-error");
 const ActionsEnum = require("./actions-enum");
 
 class CategoryService {
@@ -38,6 +39,9 @@ class CategoryService {
      * Persist category using supported storage.
      * 
      * @param {Category} category 
+     * 
+     * @throws ValidationError
+     * 
      * @returns {number} created category id
      */
     async create(category) {
@@ -53,6 +57,8 @@ class CategoryService {
      * Update category identified by category.id.
      * 
      * @param {Category} category 
+     * 
+     * @throws ValidationError
      */
     async update(category) {
         this.validator.validate(
@@ -77,12 +83,32 @@ class CategoryService {
      * 
      * @param {number} id
      * 
+     * @throws ResourceNotFoundError
+     * 
      * @return {Array<number>} 
      */
      async getSubCategoriesIds(id) {
         const category = await this.findById(id, true);
-        
+
         return category.ids;
+    }
+
+    /**
+     * Check if all categories is exists in our storage.
+     * 
+     * @param {Array<number>} ids 
+     * 
+     * @throws ResourceNotFoundError
+     */
+    async isAllCategoriesExists(ids) {
+        let categories = await this.repository.findCategories(ids, ['id']);
+        categories = categories.map(c => c.id);
+
+        if(categories.length !== ids.length) {
+            const notFoundCategories = ids.filter(id => !categories.includes(id));
+            throw new ResourceNotFoundError(`categories with ids [${notFoundCategories}] doesn't exists`)
+        }
+
     }
 }
 

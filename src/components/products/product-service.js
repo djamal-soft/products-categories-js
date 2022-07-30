@@ -1,4 +1,5 @@
 const ActionsEnum = require("./actions-enum");
+const Product = require("./product");
 
 class ProductService {
     
@@ -27,6 +28,8 @@ class ProductService {
      * @param {int} id 
      * @param {boolean} hierarchy 
      * 
+     * @throws ResourceNotFoundError
+     * 
      * @returns {Array<Product>}
      */
     findById(id) {
@@ -37,6 +40,9 @@ class ProductService {
      * Persist product using supported storage.
      * 
      * @param {Product} product 
+     * 
+     * @throws ValidationError
+     * 
      * @returns {int} created product id
      */
     async create(product) {
@@ -45,9 +51,20 @@ class ProductService {
             ActionsEnum.CREATE_PRODUCT
         );
 
+        if(product.categories) {
+            await this.categoryService.isAllCategoriesExists(product.categories);
+        }
+
         return this.repository.create(product);
     }
 
+    /**
+     * Update product identified by product.id.
+     * 
+     * @param {Product} product 
+     * 
+     * @throws ValidationError
+     */
     async update(product) {
         this.validator.validate(
             product.serialize(), 
@@ -57,18 +74,27 @@ class ProductService {
         await this.repository.update(product);
     }
 
+    /**
+     * delete product identified by product.id.
+     * 
+     * @param {number} id 
+     */
     delete(id) {
         this.repository.delete(id);
     }
 
     /**
-     * Returns products belongs to array of categories.
+     * Returns products belongs to a category and its sub categories.
      * 
-     * @param {Array<number>} categories 
+     * @param {number} categoryId
+     * 
+     * @throws ResourceNotFoundError
+     * 
+     * @return {Array<Product>} 
      */
-     async getProductsBelongsTo(categoryId) {
-         const categories = await this.categoryService.getSubCategoriesIds(categoryId);
-         console.log(categories);
+     async getCategoryProducts(categoryId) {
+        const categories = await this.categoryService.getSubCategoriesIds(categoryId);
+
         return this.repository.getProductsBelongsTo(categories);
     }
 }

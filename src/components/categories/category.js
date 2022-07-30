@@ -61,7 +61,7 @@ class Category extends BaseModel {
     get ids() {
         return this.children?.length > 0 
             ? [this.id, ...this.children.flatMap(c => c.ids)] 
-            : this.id;
+            : [this.id];
     }
 }
 

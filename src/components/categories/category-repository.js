@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const ResourceNotFoundError = require('../../common/exceptions/business/resource-not-found-error');
 const Category = require('./category');
 
@@ -29,6 +30,8 @@ class CategoryRepository {
      * 
      * @param {int} id 
      * @param {boolean} hierarchy 
+     * 
+     * @throws ResourceNotFoundError
      * 
      * @returns {Array<Category>}
      */
@@ -68,6 +71,8 @@ class CategoryRepository {
      * Update category data identified by category.id in database.
      * 
      * @param {Category} category 
+     * 
+     * @throws ResourceNotFoundError
      */
     async update(category) {
         const result = await this.categorySchema.update(category.serialize(), {
@@ -90,6 +95,26 @@ class CategoryRepository {
         await this.categorySchema.destroy({
             where: { id }
           });
+    }
+
+    /**
+     * Return categories that its id in array of ids sent in params. 
+     * 
+     * @param {Array<number>} ids 
+     * 
+     * @returns {Array<Category>}
+     */
+    async findCategories(ids) {
+        const options = { 
+            where: { 
+                id: {[Op.in]: ids}
+            }, 
+            raw: true, 
+        };
+        
+        const categories = await this.categorySchema.findAll(options);
+
+        return categories.map(c => Category.fromObject(c));
     }
 }
 

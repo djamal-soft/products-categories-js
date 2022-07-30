@@ -51,9 +51,7 @@ class ProductController {
      */
     async createProduct(req, res, next) {
         try {
-            console.log(req.body);
             const product = Product.fromObject(req.body);
-            console.log(product);
             const id = await this.productService.create(product);
 
             res.json({id});
@@ -101,15 +99,16 @@ class ProductController {
     }
 
     /**
-     * Handle delete product identified by id route.
+     * Handle get category products.
+     * products in sub categories should retrieve it too
      * 
      * @param {Request} req 
      * @param {Response} res 
      */
-     async getProductsBelongsTo(req, res, next) {
+     async getCategoryProducts(req, res, next) {
         try {
             const categoryId = req.params.categoryId;
-            const products   = await this.productService.getProductsBelongsTo(categoryId);
+            const products   = await this.productService.getCategoryProducts(categoryId);
 
             res.json(products.map(p => p.serialize()));
         } catch (error) {
