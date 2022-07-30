@@ -1,0 +1,316 @@
+openapi: 3.0.0
+info:
+  title: products-categories
+  version: 1.0.0
+servers:
+  - url: 'http://{{baseurl}}'
+tags:
+  - name: Categories
+  - name: Products
+paths:
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: get all gategories
+      parameters:
+        - name: hierarchy
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              examples: {}
+            application/xml:
+              schema:
+                type: object
+                properties: {}
+      operationId: getAllCategories
+    post:
+      tags:
+        - Categories
+      summary: add category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: cat 2
+                parentId: 1
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+    parameters: []
+  '/categories/{id}':
+    get:
+      tags:
+        - Categories
+      summary: get single category
+      parameters:
+        - name: hierarchy
+          in: query
+          schema:
+            type: boolean
+          example: 'true'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '404':
+          description: Not Found
+        '':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+              examples:
+                example-1:
+                  value:
+                    - id: 0
+                      name: string
+                      parentId: 0
+                      children:
+                        - {}
+    parameters:
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+    patch:
+      summary: update category
+      operationId: patch-categories-id
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+            examples:
+              example-1:
+                value:
+                  name: string
+                  parentId: 1
+      tags:
+        - Categories
+    delete:
+      summary: delete category
+      operationId: delete-categories-id
+      responses:
+        '204':
+          description: No Content
+      tags:
+        - Categories
+  /products:
+    get:
+      tags:
+        - Products
+      summary: get all products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    - id: 6
+                      name: string
+                      categories:
+                        - id: 4
+                          name: string
+                          parentId: 2
+    post:
+      tags:
+        - Products
+      summary: add product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+              examples:
+                example-1:
+                  value:
+                    id: 12
+        '400':
+          description: Bad Request
+  '/products/{id}':
+    get:
+      tags:
+        - Products
+      summary: get single product
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    id: 120
+                    name: string
+                    categories:
+                      - id: 10
+                        name: string
+                        parentId: null
+    parameters:
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+    patch:
+      summary: update product
+      operationId: patch-products-id
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+            examples:
+              example-1:
+                value:
+                  name: string
+                  categories:
+                    - 1
+                    - 4
+                    - 67
+      tags:
+        - Products
+    delete:
+      summary: delete product
+      operationId: delete-products-id
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Products
+  '/categories/{categoryId}/products':
+    get:
+      tags:
+        - Products
+      summary: get category products
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+        '':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+              examples:
+                example-1:
+                  value:
+                    - id: 13
+                      name: string
+                      categories:
+                        - id: 20
+                          name: string
+                          parentId: 2
+    parameters:
+      - schema:
+          type: integer
+        name: categoryId
+        in: path
+        required: true
+components:
+  schemas:
+    Category:
+      title: Category
+      x-stoplight:
+        id: ttlc56akcwvge
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        parentId:
+          type: integer
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+      x-examples:
+        example-1:
+          id: 12
+          name: string
+          parentId: 1
+          children:
+            - id: 16
+              name: string
+              parentId: 12
+              children: []
+            - id: 17
+              name: string
+              parentId: 12
+              children: []
+    Product:
+      title: Product
+      x-stoplight:
+        id: wbbmrf81poq3x
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+      x-examples:
+        example-1:
+          id: 2
+          name: string
+          categories:
+            - id: 1
+              name: string
+              parentId: null
