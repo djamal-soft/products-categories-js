@@ -1,3 +1,4 @@
+const ValidationError = require("../../common/exceptions/business/validation-error");
 const BaseModel = require("../../common/models/base-model");
 const Category = require("../categories/category");
 
@@ -35,8 +36,12 @@ class Product extends BaseModel {
      * @param {int} value 
      */
      set categories(value) {
+        if(!Array.isArray(value)) {
+            throw new ValidationError({categories: ['categories must be an array']});
+        }
+
         if(value.every(v => typeof v === 'number')) {
-            this._categories = value;
+            this._categories = [...new Set(value)];
         } else {
             this._categories = value.map(v => Category.fromObject(v));
         }

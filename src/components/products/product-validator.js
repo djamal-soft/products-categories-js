@@ -1,15 +1,17 @@
 const ModelValidator = require("../../common/models/model-validator");
 const ActionsEnum = require("./actions-enum");
-const rules = {};
-
-rules[ActionsEnum.CREATE_PRODUCT] = {
-    'name': 'required|string|min:3|max:255',
-    'categories.*': 'numeric|min:1'
-}
-
-rules[ActionsEnum.UPDATE_PRODUCT] = {
-    'name': 'string|min:3|max:255',
-}
+const rules = {
+    [ActionsEnum.CREATE_PRODUCT]: {
+        'name': 'required|string|min:3|max:255',
+        'categories': 'array',
+        'categories.*': 'numeric|min:1',
+    },
+    [ActionsEnum.UPDATE_PRODUCT]: {
+        'name': 'string|min:3|max:255',
+        'categories': 'array',
+        'categories.*': 'numeric|min:1',
+    },
+};
 
 class ProductValidator extends ModelValidator {
 
