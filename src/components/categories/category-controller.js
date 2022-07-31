@@ -33,10 +33,10 @@ class CategoryController {
      */
     async getCategoryById(req, res, next) {
         try {
-            const id        = req.params.id;
-            const hierarchy = req.query.hierarchy === 'true';
+            const id       = req.params.id;
+            const children = req.query.children === 'true';
 
-            const category  = await this.categoryService.findById(id, hierarchy);
+            const category  = await this.categoryService.findById(id, children);
 
             res.json(category.serialize());
         } catch (error) {

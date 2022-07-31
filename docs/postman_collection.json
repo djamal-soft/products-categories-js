@@ -37,7 +37,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/categories/1?hierarchy=true",
+							"raw": "{{baseUrl}}/categories/1?children=true",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -47,7 +47,7 @@
 							],
 							"query": [
 								{
-									"key": "hierarchy",
+									"key": "children",
 									"value": "true"
 								}
 							]
@@ -62,7 +62,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"cat 2\",\n\t\"parentId\": 1\n}",
+							"raw": "{\n\t\"name\": \"cat 3\",\n\t\"parentId\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -154,13 +154,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/categories/1/products",
+							"raw": "{{baseUrl}}/categories/3/products",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"categories",
-								"1",
+								"3",
 								"products"
 							]
 						}
@@ -174,7 +174,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"cat 2\",\n\t\"categories\": [1]\n}",
+							"raw": "{\n\t\"name\": \"pro 2\",\n\t\"categories\": [3]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -200,7 +200,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"cat 2\",\n\t\"parentId\": 1\n}",
+							"raw": "{\n\t\"name\": \"cat 2\",\n\t\"categories\": [1, 2]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -208,13 +208,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrl}}/categories/2",
+							"raw": "{{baseUrl}}/products/1",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"categories",
-								"2"
+								"products",
+								"1"
 							]
 						}
 					},

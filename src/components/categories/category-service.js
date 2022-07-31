@@ -23,16 +23,16 @@ class CategoryService {
 
     /**
      * Retriev category that identified by id from storage.
-     * if hierarchy is true then return data as a hierarchy 
+     * if children is true then return category children 
      * otherwise return category without children.
      * 
      * @param {number} id 
-     * @param {boolean} hierarchy 
+     * @param {boolean} children 
      * 
      * @returns {Array<Category>}
      */
-    async findById(id, hierarchy = false) {
-        return this.repository.findById(id, hierarchy);
+    async findById(id, children = false) {
+        return this.repository.findById(id, children);
     }
 
     /**

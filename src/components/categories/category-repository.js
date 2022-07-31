@@ -35,13 +35,13 @@ class CategoryRepository {
      * 
      * @returns {Array<Category>}
      */
-    async findById(id, hierarchy = false) {
+    async findById(id, children = false) {
         const category = await this.categorySchema.findOne({
             where: { id },
             include: {
               model: this.categorySchema,
               as: 'descendents',
-              hierarchy: hierarchy
+              hierarchy: children
             }
           });
 
